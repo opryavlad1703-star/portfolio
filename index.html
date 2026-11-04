@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="uk" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPER VLADYSLAV BROS. — 8-Bit Developer Portfolio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Retro 8-Bit Font & FontAwesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        pixel: ['"Press Start 2P"', 'monospace'],
+                    },
+                    colors: {
+                        marioSky: '#5c94fc',
+                        marioGround: '#d84800',
+                        marioYellow: '#f8d800',
+                        marioRed: '#f83800',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #5c94fc;
+            font-family: 'Press Start 2P', monospace;
+            color: #ffffff;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        /* Fixed Parallax Clouds (їдуть разом з камерою) */
+        .mario-cloud {
+            position: fixed;
+            background: #ffffff;
+            border: 4px solid #000000;
+            box-shadow: inset -4px -4px 0 0 #b0b0b0, inset 4px 4px 0 0 #ffffff;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .cloud-1 { width: 130px; height: 44px; top: 15vh; left: 10%; opacity: 0.95; }
+        .cloud-2 { width: 170px; height: 52px; top: 45vh; right: 8%; opacity: 0.95; }
+        .cloud-3 { width: 110px; height: 38px; top: 75vh; left: 15%; opacity: 0.95; }
+
+        /* Smooth & Clean Fade Reveal */
+        .mario-scroll-reveal {
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+        .mario-scroll-reveal.visible {
+            opacity: 1;
+        }
+
+        /* Clean 8-Bit Banners */
+        .mario-banner {
+            background-color: #381000;
+            border: 4px solid #000000;
+            box-shadow: inset -4px -4px 0 0 #180000, inset 4px 4px 0 0 #782800;
+        }
+        .mario-banner-gold {
+            background-color: #f8d800;
+            color: #000000;
+            border: 4px solid #000000;
+            box-shadow: inset -4px -4px 0 0 #b89800, inset 4px 4px 0 0 #fff880;
+        }
+
+        /* Interactive Question Block */
+        .question-block {
+            background: linear-gradient(135deg, #f8d878 0%, #fc9838 100%);
+            border: 4px solid #000;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s ease;
+            box-shadow: inset -4px -4px 0 0 #b84400, inset 4px 4px 0 0 #fffcb8;
+        }
+        .question-block::before {
+            content: '?';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #000;
+            text-shadow: 2px 2px 0 #fff;
+            animation: pulseQuestion 1s infinite alternate;
+        }
+        @keyframes pulseQuestion { 0% { transform: scale(0.95); } 100% { transform: scale(1.05); } }
+        .question-block:active { transform: translateY(-8px); }
+        .question-block.empty-block {
+            background: #a85a32 !important;
+            box-shadow: inset -4px -4px 0 0 #5c2c10, inset 4px 4px 0 0 #d88860 !important;
+        }
+        .question-block.empty-block::before { content: ''; }
+
+        /* Bricks & Ground */
+        .mario-brick {
+            background-color: #b84400;
+            border: 4px solid #000;
+            box-shadow: inset -3px -3px 0 0 #602000, inset 3px 3px 0 0 #f88850;
+        }
+        
+        .mario-ground {
+            background-color: #d84800;
+            background-image: radial-gradient(#000 15%, transparent 16%), radial-gradient(#000 15%, transparent 16%);
+            background-size: 16px 16px;
+            background-position: 0 0, 8px 8px;
+            border-top: 6px solid #000;
+        }
+
+        /* Pipes */
+        .mario-pipe {
+            background: linear-gradient(90deg, #005000 0%, #00a800 25%, #00e800 50%, #00a800 75%, #005000 100%);
+            border: 4px solid #000;
+        }
+        .mario-pipe-top {
+            background: linear-gradient(90deg, #005000 0%, #00a800 20%, #00e800 50%, #00a800 80%, #005000 100%);
+            border: 4px solid #000;
+            box-shadow: inset 0 -4px 0 0 #003000, inset 0 4px 0 0 #80ff80;
+        }
+
+        /* Castle Structure */
+        .mario-castle-structure {
+            background-color: #381000;
+            background-image: 
+                linear-gradient(45deg, #240800 25%, transparent 25%, transparent 75%, #240800 75%, #240800), 
+                linear-gradient(45deg, #240800 25%, transparent 25%, transparent 75%, #240800 75%, #240800);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+            border: 4px solid #000000;
+            box-shadow: inset -4px -4px 0 0 #180000, inset 4px 4px 0 0 #782800;
+        }
+
+        /* Badges & Buttons */
+        .coin-badge {
+            background-color: #f8d800;
+            color: #000000;
+            border: 2px solid #000000;
+            box-shadow: inset -2px -2px 0 0 #b89800, inset 2px 2px 0 0 #fff880;
+        }
+        .mario-btn-gold {
+            background-color: #f8d800;
+            color: #000000;
+            border: 4px solid #000000;
+            box-shadow: inset -3px -3px 0 0 #b89800, inset 3px 3px 0 0 #fff880;
+            font-weight: bold;
+            transition: all 0.1s ease;
+        }
+        .mario-btn-gold:hover {
+            background-color: #ffffff;
+            box-shadow: inset -3px -3px 0 0 #aaaaaa, inset 3px 3px 0 0 #ffffff;
+        }
+        .mario-btn-gold:active { transform: translateY(2px); }
+
+        /* Coin Animation */
+        @keyframes coinPop {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-50px) scale(1.3); opacity: 1; }
+            100% { transform: translateY(-80px) scale(0.8); opacity: 0; }
+        }
+        .coin-popup {
+            position: absolute;
+            animation: coinPop 0.6s ease-out forwards;
+            pointer-events: none;
+            color: #f8d878;
+            font-size: 1rem;
+            text-shadow: 2px 2px 0 #000;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-yellow-400 selection:text-black">
+
+    <!-- Fixed Parallax Background Clouds -->
+    <div class="mario-cloud cloud-1"></div>
+    <div class="mario-cloud cloud-2"></div>
+    <div class="mario-cloud cloud-3"></div>
+
+    <!-- NES HUD -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-black border-b-4 border-white px-3 py-2 text-white font-pixel text-[10px] sm:text-xs">
+        <div class="max-w-6xl mx-auto flex items-center justify-between flex-wrap gap-2">
+            <div><p class="text-marioRed font-bold">VLADYSLAV</p><p id="hud-score" class="text-white mt-1">002400</p></div>
+            <div class="flex items-center gap-1">
+                <span class="inline-block w-4 h-4 bg-marioYellow border border-black text-black text-center font-bold text-[10px]">🪙</span>
+                <span class="text-marioYellow">x</span><span id="hud-coins" class="text-white">05</span>
+            </div>
+            <div class="text-center"><p class="text-marioSky">WORLD</p><p class="text-white mt-1">1-1</p></div>
+            <div class="text-center"><p class="text-marioRed">TIME</p><p id="hud-time" class="text-marioYellow mt-1">300</p></div>
+            <button id="sound-btn" onclick="toggleSound()" class="px-2 py-1 bg-[#b84400] border-2 border-white text-white hover:bg-marioRed transition text-[9px] cursor-pointer">
+                🔊 SOUND [ON]
+            </button>
+        </div>
+    </header>
+
+    <main class="relative z-10 max-w-5xl mx-auto px-4 pt-28 pb-16 w-full space-y-16">
+
+        <!-- Hero Section -->
+        <section class="text-center space-y-6 pt-2 mario-scroll-reveal">
+            <div class="mario-banner p-4 sm:p-6 text-center max-w-3xl mx-auto w-full">
+                <p class="text-marioYellow text-xs sm:text-sm tracking-widest mb-2 animate-pulse">★ PRESS START TO PLAY ★</p>
+                <h1 class="text-lg sm:text-2xl text-white font-bold leading-relaxed tracking-wider">SUPER VLADYSLAV BROS.</h1>
+                <p class="text-marioSky text-xs sm:text-sm mt-3">FRONT-END & WEB DEVELOPER</p>
+            </div>
+
+            <div class="flex justify-center items-center gap-3 sm:gap-6 py-2">
+                <div class="mario-brick w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-xs">🧱</div>
+                <div class="question-block w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center font-bold" onclick="hitQuestionBlock(this, 'HTML5 & CSS3 Power!')"></div>
+                <div class="mario-brick w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-xs">🧱</div>
+                <div class="question-block w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center font-bold" onclick="hitQuestionBlock(this, 'JavaScript Unlocked!')"></div>
+                <div class="mario-brick w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-xs">🧱</div>
+            </div>
+
+            <!-- Profile Card with Photo -->
+            <div class="mario-banner p-6 sm:p-8 max-w-3xl mx-auto text-left space-y-6">
+                <div class="flex flex-col sm:flex-row items-center sm:items-center gap-8">
+                    <div class="relative w-44 h-44 flex-shrink-0 bg-black border-4 border-white p-1.5 shadow-[6px_6px_0_0_#000]">
+                        <img src="images/vlad-photo.jpg" 
+                             alt="Vladyslav" class="w-full h-full object-cover object-center" style="image-rendering: auto;"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';">
+                        <span class="absolute -bottom-3 -right-3 bg-marioRed text-white text-[10px] px-2.5 py-1 border-2 border-black font-bold shadow">LVL 99</span>
+                    </div>
+                    <div class="space-y-4 text-xs leading-loose">
+                        <p class="text-marioYellow font-bold text-sm tracking-wide">&gt; PLAYER: VLADYSLAV</p>
+                        <p class="text-zinc-100 text-sm leading-relaxed">Привіт! Я веб-розробник із м. Кропивницький. Створюю сучасні сайти, веб-додатки та інтерактивні інтерфейси.</p>
+                        <p class="text-[#00e800] font-bold text-xs pt-1">📍 LOCATION: KROPYVNYTSKYI</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- World 1-2: Power-Up Skills (Bright & Retro-Stylish) -->
+        <section class="space-y-6 mario-scroll-reveal">
+            <div class="mario-banner p-3 inline-block">
+                <h2 class="text-marioYellow text-xs sm:text-sm font-bold flex items-center gap-2">⭐ WORLD 1-2: POWER-UP SKILLS</h2>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- Skill 1 -->
+                <div class="bg-[#b84400] border-4 border-black p-5 space-y-4 shadow-[inset_-4px_-4px_0_0_#602000,inset_4px_4px_0_0_#f88850,0_6px_0_0_#000] hover:-translate-y-1 transition-transform flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-marioYellow border-2 border-black flex items-center justify-center text-black text-lg mb-4 shadow-[2px_2px_0_0_#000]">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h3 class="text-xs font-bold text-marioYellow mb-2 tracking-wider">FRONT-END</h3>
+                        <p class="text-[10px] text-white leading-relaxed">HTML5, CSS3, JS, анімації та інтерактивні інтерфейси.</p>
+                    </div>
+                    <div class="text-[9px] text-marioYellow font-bold pt-3 border-t border-black/40 flex justify-between items-center">
+                        <span>POWER</span>
+                        <span class="text-[#f8d800]">MAX ★</span>
+                    </div>
+                </div>
+
+                <!-- Skill 2 -->
+                <div class="bg-[#b84400] border-4 border-black p-5 space-y-4 shadow-[inset_-4px_-4px_0_0_#602000,inset_4px_4px_0_0_#f88850,0_6px_0_0_#000] hover:-translate-y-1 transition-transform flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-marioYellow border-2 border-black flex items-center justify-center text-black text-lg mb-4 shadow-[2px_2px_0_0_#000]">
+                            <i class="fa-solid fa-database"></i>
+                        </div>
+                        <h3 class="text-xs font-bold text-marioYellow mb-2 tracking-wider">BACKEND & DB</h3>
+                        <p class="text-[10px] text-white leading-relaxed">PHP, MySQL, побудова логіки інтернет-магазинів.</p>
+                    </div>
+                    <div class="text-[9px] text-marioYellow font-bold pt-3 border-t border-black/40 flex justify-between items-center">
+                        <span>POWER</span>
+                        <span class="text-[#f8d800]">MAX ★</span>
+                    </div>
+                </div>
+
+                <!-- Skill 3 -->
+                <div class="bg-[#b84400] border-4 border-black p-5 space-y-4 shadow-[inset_-4px_-4px_0_0_#602000,inset_4px_4px_0_0_#f88850,0_6px_0_0_#000] hover:-translate-y-1 transition-transform flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-marioYellow border-2 border-black flex items-center justify-center text-black text-lg mb-4 shadow-[2px_2px_0_0_#000]">
+                            <i class="fa-solid fa-paintbrush"></i>
+                        </div>
+                        <h3 class="text-xs font-bold text-marioYellow mb-2 tracking-wider">UI/UX FIGMA</h3>
+                        <p class="text-[10px] text-white leading-relaxed">Проєктування інтерфейсів, SMM-дизайн та прототипи.</p>
+                    </div>
+                    <div class="text-[9px] text-marioYellow font-bold pt-3 border-t border-black/40 flex justify-between items-center">
+                        <span>POWER</span>
+                        <span class="text-[#f8d800]">MAX ★</span>
+                    </div>
+                </div>
+
+                <!-- Skill 4 -->
+                <div class="bg-[#b84400] border-4 border-black p-5 space-y-4 shadow-[inset_-4px_-4px_0_0_#602000,inset_4px_4px_0_0_#f88850,0_6px_0_0_#000] hover:-translate-y-1 transition-transform flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-marioYellow border-2 border-black flex items-center justify-center text-black text-lg mb-4 shadow-[2px_2px_0_0_#000]">
+                            <i class="fa-solid fa-rocket"></i>
+                        </div>
+                        <h3 class="text-xs font-bold text-marioYellow mb-2 tracking-wider">GIT & TOOLS</h3>
+                        <p class="text-[10px] text-white leading-relaxed">GitHub, контроль версій та розгортання на Vercel.</p>
+                    </div>
+                    <div class="text-[9px] text-marioYellow font-bold pt-3 border-t border-black/40 flex justify-between items-center">
+                        <span>POWER</span>
+                        <span class="text-[#f8d800]">MAX ★</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects / Pipes -->
+        <section id="projects" class="space-y-8 mario-scroll-reveal">
+            <div class="mario-banner p-3 inline-block">
+                <h2 class="text-[#00e800] text-xs sm:text-sm font-bold flex items-center gap-2"><span>🧪</span> WORLD 1-3: WARP ZONE (PROJECTS)</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+                <!-- Pipe 1 -->
+                <div class="flex flex-col h-full hover:-translate-y-2 transition-transform duration-300">
+                    <div class="mario-pipe-top h-10 w-full flex items-center justify-center font-bold text-xs text-white">PIPE 01</div>
+                    <div class="mario-pipe p-5 space-y-4 text-white flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <span class="coin-badge text-[9px] px-2 py-1 inline-block">🪙 LIVE VERCEL APP</span>
+                            <h3 class="text-base font-bold">MY LIFE JET</h3>
+                            <p class="text-[10px] leading-relaxed">Персональний інтерактивний веб-проєкт. Оптимізовано та розгорнуто на Vercel.</p>
+                        </div>
+                        <a href="https://my-life-jet-xi.vercel.app/" target="_blank" onclick="playPowerupSound()" class="mario-btn-gold block w-full py-3 text-center text-xs">ENTER PIPE ➔</a>
+                    </div>
+                </div>
+
+                <!-- Pipe 2 -->
+                <div class="flex flex-col h-full hover:-translate-y-2 transition-transform duration-300 delay-100">
+                    <div class="mario-pipe-top h-10 w-full flex items-center justify-center font-bold text-xs text-white">PIPE 02</div>
+                    <div class="mario-pipe p-5 space-y-4 text-white flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <span class="coin-badge text-[9px] px-2 py-1 inline-block">🪙 PHP & MYSQL</span>
+                            <h3 class="text-base font-bold">TECHSHOP STORE</h3>
+                            <p class="text-[10px] leading-relaxed">Full-stack інтернет-магазин електроніки з кошиком товарів та збереженням замовлень.</p>
+                        </div>
+                        <a href="https://github.com/opryavlad1703-star" target="_blank" onclick="playPowerupSound()" class="mario-btn-gold block w-full py-3 text-center text-xs">GITHUB CODE ➔</a>
+                    </div>
+                </div>
+
+                <!-- Pipe 3 -->
+                <div class="flex flex-col h-full hover:-translate-y-2 transition-transform duration-300 delay-200">
+                    <div class="mario-pipe-top h-10 w-full flex items-center justify-center font-bold text-xs text-white">PIPE 03</div>
+                    <div class="mario-pipe p-5 space-y-4 text-white flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <span class="coin-badge text-[9px] px-2 py-1 inline-block">🪙 FIGMA SMM</span>
+                            <h3 class="text-base font-bold">ПРОДАЖ КВАРТИР</h3>
+                            <p class="text-[10px] leading-relaxed">Преміальний рекламний дизайн-макет для нерухомості у смарагдово-золотих тонах.</p>
+                        </div>
+                        <a href="https://www.figma.com/proto/xOTpDNeVsWeqwJAmI2UqLv/Figma-basics?node-id=2603-201&t=jhH9xUfoGEa4vS0e-1" target="_blank" onclick="playPowerupSound()" class="mario-btn-gold block w-full py-3 text-center text-xs">PROTOTYPE ➔</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- World 1-4 Contact -->
+        <section id="contact" class="space-y-6 pt-4 mario-scroll-reveal">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <div class="mario-banner p-3">
+                    <h2 class="text-marioRed text-xs sm:text-sm font-bold flex items-center gap-2">🏰 WORLD 1-4: THE CASTLE</h2>
+                </div>
+                <div class="mario-banner-gold p-3 text-xs font-bold text-center">🚩 WORLD CLEAR! 100%</div>
+            </div>
+
+            <div class="mario-castle-structure p-5 sm:p-8 relative">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 bg-[#381000]/90 p-4 border-2 border-black">
+                    
+                    <!-- Left: Text & Social -->
+                    <div class="space-y-6 text-xs leading-loose">
+                        <p class="text-marioYellow font-bold text-sm">THANK YOU MARIO!</p>
+                        <p class="text-zinc-200">Готові до співпраці? Напишіть мені для обговорення веб-розробки, верстки сайту або дизайну.</p>
+                        
+                        <div class="flex flex-col gap-4 pt-2">
+                            <!-- Змінено кнопку на посилання mailto з твоєю поштою та темою -->
+                            <a href="mailto:oprya.vlad1703@gmail.com?subject=Співпраця%20з%20веб-розробки" onclick="playCoinSound()" class="w-full bg-[#00a800] hover:bg-[#00e800] border-4 border-black shadow-[inset_-3px_-3px_0_0_#005000,inset_3px_3px_0_0_#80ff80] p-4 text-white font-bold transition flex items-center justify-center gap-3 active:translate-y-1 cursor-pointer no-underline text-center">
+                                <i class="fa-solid fa-envelope text-lg"></i> EMAIL ME
+                            </a>
+
+                            <a href="https://t.me/opryavlad" target="_blank" onclick="playPowerupSound()" class="w-full bg-[#0078f8] hover:bg-[#3cbcfe] border-4 border-black shadow-[inset_-3px_-3px_0_0_#0000a8,inset_3px_3px_0_0_#80d0f8] p-4 text-white font-bold transition flex items-center justify-center gap-3 active:translate-y-1">
+                                <i class="fa-brands fa-telegram text-lg"></i> TELEGRAM
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right: Form -->
+                    <form onsubmit="submitRetroForm(event)" class="space-y-5 text-xs bg-[#240800] p-5 border-4 border-black shadow-[inset_-3px_-3px_0_0_#100200,inset_3px_3px_0_0_#601a00]">
+                        <div>
+                            <label class="block text-marioYellow mb-2 font-bold">&gt; YOUR NAME</label>
+                            <input type="text" required placeholder="Гравець 1" class="w-full bg-black border-4 border-black shadow-[inset_2px_2px_0_0_#333] p-3 text-white focus:outline-none focus:border-marioYellow font-pixel text-[10px] sm:text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-marioYellow mb-2 font-bold">&gt; CONTACT (TG/EMAIL)</label>
+                            <input type="text" required placeholder="@username" class="w-full bg-black border-4 border-black shadow-[inset_2px_2px_0_0_#333] p-3 text-white focus:outline-none focus:border-marioYellow font-pixel text-[10px] sm:text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-marioYellow mb-2 font-bold">&gt; MESSAGE</label>
+                            <textarea rows="3" required placeholder="Опишіть проект..." class="w-full bg-black border-4 border-black shadow-[inset_2px_2px_0_0_#333] p-3 text-white focus:outline-none focus:border-marioYellow font-pixel text-[10px] sm:text-xs"></textarea>
+                        </div>
+                        <button type="submit" class="mario-btn-gold w-full py-4 text-xs block text-center cursor-pointer">
+                            SEND TRANSMISSION 🚀
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="relative z-10 mario-ground py-8 text-center font-pixel text-xs text-white">
+        <div class="mario-banner inline-block px-4 py-2">
+            © 2026 VLADYSLAV. BUILT WITH NES 8-BIT PASSION.
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="retro-toast" class="fixed bottom-6 right-6 z-50 mario-banner-gold p-4 font-pixel text-xs hidden shadow-2xl">
+        <span id="toast-msg">COIN COLLECTED!</span>
+    </div>
+
+    <!-- Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.mario-scroll-reveal').forEach(el => observer.observe(el));
+        });
+
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        let soundEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playCoinSound() {
+            if (!soundEnabled) return;
+            initAudio();
+            const now = audioCtx.currentTime;
+            
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'square';
+            osc1.frequency.setValueAtTime(987.77, now);
+            gain1.gain.setValueAtTime(0.15, now);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+            osc1.connect(gain1); gain1.connect(audioCtx.destination);
+            osc1.start(now); osc1.stop(now + 0.08);
+
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'square';
+            osc2.frequency.setValueAtTime(1318.51, now + 0.08);
+            gain2.gain.setValueAtTime(0.15, now + 0.08);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc2.connect(gain2); gain2.connect(audioCtx.destination);
+            osc2.start(now + 0.08); osc2.stop(now + 0.3);
+        }
+
+        function playPowerupSound() {
+            if (!soundEnabled) return;
+            initAudio();
+            const now = audioCtx.currentTime;
+            const freqs = [330, 392, 659, 523, 587, 784];
+            freqs.forEach((freq, index) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(freq, now + (index * 0.05));
+                gain.gain.setValueAtTime(0.1, now + (index * 0.05));
+                gain.gain.exponentialRampToValueAtTime(0.01, now + (index * 0.05) + 0.08);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(now + (index * 0.05)); osc.stop(now + (index * 0.05) + 0.08);
+            });
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('sound-btn').innerText = soundEnabled ? '🔊 SOUND [ON]' : '🔇 SOUND [OFF]';
+            if (soundEnabled) playCoinSound();
+        }
+
+        let score = 2400;
+        let coins = 5;
+
+        function hitQuestionBlock(el, msg) {
+            playCoinSound();
+            score += 200; coins += 1;
+            document.getElementById('hud-score').innerText = String(score).padStart(6, '0');
+            document.getElementById('hud-coins').innerText = String(coins).padStart(2, '0');
+
+            const rect = el.getBoundingClientRect();
+            const coinPop = document.createElement('div');
+            coinPop.className = 'coin-popup font-bold';
+            coinPop.innerText = '+200 🪙';
+            coinPop.style.left = `${rect.left + window.scrollX + 5}px`;
+            coinPop.style.top = `${rect.top + window.scrollY}px`;
+            document.body.appendChild(coinPop);
+            setTimeout(() => coinPop.remove(), 600);
+
+            el.classList.add('empty-block');
+            showToast(msg || "POWER-UP UNLOCKED!");
+        }
+
+        function showToast(text) {
+            const toast = document.getElementById('retro-toast');
+            document.getElementById('toast-msg').innerText = text;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 2500);
+        }
+
+        function copyEmail() {
+            playCoinSound();
+            const email = "vladyslav.dev@gmail.com";
+            const ta = document.createElement("textarea");
+            ta.value = email;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (err) {}
+            document.body.removeChild(ta);
+            showToast("EMAIL COPIED TO CLIPBOARD!");
+        }
+
+        function submitRetroForm(e) {
+            e.preventDefault();
+            playPowerupSound();
+            showToast("TRANSMISSION SENT TO CASTLE!");
+            e.target.reset();
+        }
+
+        let time = 300;
+        setInterval(() => {
+            if (time > 0) {
+                time--;
+                document.getElementById('hud-time').innerText = String(time).padStart(3, '0');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

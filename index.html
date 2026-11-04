@@ -53,7 +53,7 @@
             position: relative;
         }
 
-        /* Fixed Parallax Clouds (їдуть разом з камерою) */
+        /* Fixed Parallax Clouds */
         .mario-cloud {
             position: fixed;
             background: #ffffff;
@@ -338,7 +338,7 @@
                             <h3 class="text-base font-bold">MY LIFE JET</h3>
                             <p class="text-[10px] leading-relaxed">Персональний інтерактивний веб-проєкт. Оптимізовано та розгорнуто на Vercel.</p>
                         </div>
-                        <a href="https://my-life-jet-xi.vercel.app/" target="_blank" onclick="playPowerupSound()" class="mario-btn-gold block w-full py-3 text-center text-xs">ENTER PIPE ➔</a>
+                        <a href="https://my-life-jet-xi.vercel.app/" target="_blank" class="mario-btn-gold block w-full py-3 text-center text-xs">ENTER PIPE ➔</a>
                     </div>
                 </div>
 
@@ -351,7 +351,7 @@
                             <h3 class="text-base font-bold">TECHSHOP STORE</h3>
                             <p class="text-[10px] leading-relaxed">Full-stack інтернет-магазин електроніки з кошиком товарів та збереженням замовлень.</p>
                         </div>
-                        <a href="https://github.com/opryavlad1703-star" target="_blank" onclick="playPowerupSound()" class="mario-btn-gold block w-full py-3 text-center text-xs">GITHUB CODE ➔</a>
+                        <a href="https://github.com/opryavlad1703-star" target="_blank" class="mario-btn-gold block w-full py-3 text-center text-xs">GITHUB CODE ➔</a>
                     </div>
                 </div>
 
@@ -364,7 +364,7 @@
                             <h3 class="text-base font-bold">ПРОДАЖ КВАРТИР</h3>
                             <p class="text-[10px] leading-relaxed">Преміальний рекламний дизайн-макет для нерухомості у смарагдово-золотих тонах.</p>
                         </div>
-                        <a href="https://www.figma.com/proto/xOTpDNeVsWeqwJAmI2UqLv/Figma-basics?node-id=2603-201&t=jhH9xUfoGEa4vS0e-1" target="_blank" onclick="playPowerupSound()" class="mario-btn-gold block w-full py-3 text-center text-xs">PROTOTYPE ➔</a>
+                        <a href="https://www.figma.com/proto/xOTpDNeVsWeqwJAmI2UqLv/Figma-basics?node-id=2603-201&t=jhH9xUfoGEa4vS0e-1" target="_blank" class="mario-btn-gold block w-full py-3 text-center text-xs">PROTOTYPE ➔</a>
                     </div>
                 </div>
             </div>
@@ -388,12 +388,12 @@
                         <p class="text-zinc-200">Готові до співпраці? Напишіть мені для обговорення веб-розробки, верстки сайту або дизайну.</p>
                         
                         <div class="flex flex-col gap-4 pt-2">
-                            <!-- Змінено кнопку на посилання mailto з твоєю поштою та темою -->
-                            <a href="mailto:oprya.vlad1703@gmail.com?subject=Співпраця%20з%20веб-розробки" onclick="playCoinSound()" class="w-full bg-[#00a800] hover:bg-[#00e800] border-4 border-black shadow-[inset_-3px_-3px_0_0_#005000,inset_3px_3px_0_0_#80ff80] p-4 text-white font-bold transition flex items-center justify-center gap-3 active:translate-y-1 cursor-pointer no-underline text-center">
+                            <!-- Оновлена кнопка з MAILTO -->
+                            <a href="mailto:oprya.vlad1703@gmail.com?subject=Співпраця%20з%20веб-розробки" class="w-full bg-[#00a800] hover:bg-[#00e800] border-4 border-black shadow-[inset_-3px_-3px_0_0_#005000,inset_3px_3px_0_0_#80ff80] p-4 text-white font-bold transition flex items-center justify-center gap-3 active:translate-y-1 cursor-pointer no-underline text-center">
                                 <i class="fa-solid fa-envelope text-lg"></i> EMAIL ME
                             </a>
 
-                            <a href="https://t.me/opryavlad" target="_blank" onclick="playPowerupSound()" class="w-full bg-[#0078f8] hover:bg-[#3cbcfe] border-4 border-black shadow-[inset_-3px_-3px_0_0_#0000a8,inset_3px_3px_0_0_#80d0f8] p-4 text-white font-bold transition flex items-center justify-center gap-3 active:translate-y-1">
+                            <a href="https://t.me/opryavlad" target="_blank" class="w-full bg-[#0078f8] hover:bg-[#3cbcfe] border-4 border-black shadow-[inset_-3px_-3px_0_0_#0000a8,inset_3px_3px_0_0_#80d0f8] p-4 text-white font-bold transition flex items-center justify-center gap-3 active:translate-y-1">
                                 <i class="fa-brands fa-telegram text-lg"></i> TELEGRAM
                             </a>
                         </div>
@@ -435,6 +435,11 @@
         <span id="toast-msg">COIN COLLECTED!</span>
     </div>
 
+    <!-- ТЕГ АУДІО ДЛЯ МУЗИКИ (Надійне посилання з Archive.org) -->
+    <audio id="mario-bgm" loop preload="auto">
+        <source src="https://ia800504.us.archive.org/33/items/SuperMarioBros.ThemeMusic/SuperMarioBros.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -452,6 +457,21 @@
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
         let soundEnabled = true;
+
+        // Ініціалізація фонової музики
+        const bgMusic = document.getElementById('mario-bgm');
+        if (bgMusic) bgMusic.volume = 0.15; // 15% гучності, щоб не кричало
+
+        // Запуск музики та розблокування звуку при будь-якому першому кліку
+        const initAllAudio = () => {
+            initAudio();
+            if (soundEnabled && bgMusic && bgMusic.paused) {
+                bgMusic.play().catch(e => console.log("Відтворення очікує дозволу браузера"));
+            }
+            // Видаляємо слухач, щоб не запускати код при кожному кліку
+            document.removeEventListener('click', initAllAudio);
+        };
+        document.addEventListener('click', initAllAudio);
 
         function initAudio() {
             if (!audioCtx) audioCtx = new AudioContext();
@@ -502,7 +522,15 @@
         function toggleSound() {
             soundEnabled = !soundEnabled;
             document.getElementById('sound-btn').innerText = soundEnabled ? '🔊 SOUND [ON]' : '🔇 SOUND [OFF]';
-            if (soundEnabled) playCoinSound();
+            
+            if (bgMusic) {
+                if (soundEnabled) {
+                    playCoinSound();
+                    bgMusic.play();
+                } else {
+                    bgMusic.pause();
+                }
+            }
         }
 
         let score = 2400;
@@ -534,18 +562,6 @@
             setTimeout(() => toast.classList.add('hidden'), 2500);
         }
 
-        function copyEmail() {
-            playCoinSound();
-            const email = "vladyslav.dev@gmail.com";
-            const ta = document.createElement("textarea");
-            ta.value = email;
-            document.body.appendChild(ta);
-            ta.select();
-            try { document.execCommand('copy'); } catch (err) {}
-            document.body.removeChild(ta);
-            showToast("EMAIL COPIED TO CLIPBOARD!");
-        }
-
         function submitRetroForm(e) {
             e.preventDefault();
             playPowerupSound();
@@ -563,3 +579,5 @@
     </script>
 </body>
 </html>
+
+```

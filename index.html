@@ -579,6 +579,49 @@
                 document.getElementById('hud-time').innerText = String(time).padStart(3, '0');
             }
         }, 1000);
+        document.querySelector('form').addEventListener('submit', async function(e) {
+    e.preventDefault(); // Зупиняємо стандартне перезавантаження сторінки
+
+    // Збираємо дані з полів твоєї форми
+    const nameInput = document.querySelector('input[placeholder="Гравець 1"]');
+    const contactInput = document.querySelector('input[placeholder="@username"]');
+    const messageInput = document.querySelector('textarea');
+
+    const name = nameInput ? nameInput.value : 'Не вказано';
+    const contact = contactInput ? contactInput.value : 'Не вказано';
+    const message = messageInput ? messageInput.value : 'Не вказано';
+
+    // Твої точні дані
+    const BOT_TOKEN = '9099488216:AAGF1hwuUq3NdUQyiS_AfZ02ST-ZZ12YHk';
+    const CHAT_ID = '1045628392';
+
+    // Формуємо красиве повідомлення у маріо-стилі
+    const text = `🕹 **Нова трансляція з портфоліо!**\n\n👤 **Гравець/Ім'я:** ${name}\n💬 **Контакт (TG/Email):** ${contact}\n📝 **Повідомлення:** ${message}`;
+
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: text,
+                parse_mode: 'Markdown'
+            })
+        });
+
+        if (response.ok) {
+            alert('Transmission sent successfully! 🚀');
+            this.reset(); // Очищуємо форму після відправки
+        } else {
+            alert('Помилка відправки. Спробуйте ще раз.');
+        }
+    } catch (error) {
+        console.error('Помилка:', error);
+        alert('Сталася помилка з\'єднання.');
+    }
+});
     </script>
 </body>
 </html>

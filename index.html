@@ -253,7 +253,7 @@
             </div>
         </section>
 
-        <!-- World 1-2: Power-Up Skills (Bright & Retro-Stylish) -->
+        <!-- World 1-2: Power-Up Skills -->
         <section class="space-y-6 mario-scroll-reveal">
             <div class="mario-banner p-3 inline-block">
                 <h2 class="text-marioYellow text-xs sm:text-sm font-bold flex items-center gap-2">⭐ WORLD 1-2: POWER-UP SKILLS</h2>
@@ -351,7 +351,7 @@
                             <h3 class="text-base font-bold">TECHSHOP STORE</h3>
                             <p class="text-[10px] leading-relaxed">Full-stack інтернет-магазин електроніки з кошиком товарів та збереженням замовлень.</p>
                         </div>
-                        <a href="https://lab-laba17.vercel.app/" target="_blank" class="mario-btn-gold block w-full py-3 text-center text-xs">VERSEL SITE ➔</a>
+                        <a href="https://lab-laba17.vercel.app/" target="_blank" class="mario-btn-gold block w-full py-3 text-center text-xs">VERCEL SITE ➔</a>
                     </div>
                 </div>
 
@@ -388,7 +388,6 @@
                         <p class="text-zinc-200">Готові до співпраці? Напишіть мені для обговорення веб-розробки, верстки сайту або дизайну.</p>
                         
                         <div class="flex flex-col gap-4 pt-2">
-                            <!-- Оновлена кнопка з MAILTO -->
                             <a href="mailto:oprya.vlad1703@gmail.com?subject=Співпраця%20з%20веб-розробки" class="w-full bg-[#00a800] hover:bg-[#00e800] border-4 border-black shadow-[inset_-3px_-3px_0_0_#005000,inset_3px_3px_0_0_#80ff80] p-4 text-white font-bold transition flex items-center justify-center gap-3 active:translate-y-1 cursor-pointer no-underline text-center">
                                 <i class="fa-solid fa-envelope text-lg"></i> EMAIL ME
                             </a>
@@ -403,7 +402,7 @@
                     </div>
 
                     <!-- Right: Form -->
-                    <form onsubmit="submitRetroForm(event)" class="space-y-5 text-xs bg-[#240800] p-5 border-4 border-black shadow-[inset_-3px_-3px_0_0_#100200,inset_3px_3px_0_0_#601a00]">
+                    <form class="space-y-5 text-xs bg-[#240800] p-5 border-4 border-black shadow-[inset_-3px_-3px_0_0_#100200,inset_3px_3px_0_0_#601a00]">
                         <div>
                             <label class="block text-marioYellow mb-2 font-bold">&gt; YOUR NAME</label>
                             <input type="text" required placeholder="Гравець 1" class="w-full bg-black border-4 border-black shadow-[inset_2px_2px_0_0_#333] p-3 text-white focus:outline-none focus:border-marioYellow font-pixel text-[10px] sm:text-xs">
@@ -438,7 +437,7 @@
         <span id="toast-msg">COIN COLLECTED!</span>
     </div>
 
-    <!-- ТЕГ АУДІО ДЛЯ МУЗИКИ (Надійне посилання з Archive.org) -->
+    <!-- Аудіо для музики -->
     <audio id="mario-bgm" loop preload="auto">
         <source src="https://ia800504.us.archive.org/33/items/SuperMarioBros.ThemeMusic/SuperMarioBros.mp3" type="audio/mpeg">
     </audio>
@@ -461,17 +460,14 @@
         let audioCtx = null;
         let soundEnabled = true;
 
-        // Ініціалізація фонової музики
         const bgMusic = document.getElementById('mario-bgm');
-        if (bgMusic) bgMusic.volume = 0.15; // 15% гучності, щоб не кричало
+        if (bgMusic) bgMusic.volume = 0.15;
 
-        // Запуск музики та розблокування звуку при будь-якому першому кліку
         const initAllAudio = () => {
             initAudio();
             if (soundEnabled && bgMusic && bgMusic.paused) {
                 bgMusic.play().catch(e => console.log("Відтворення очікує дозволу браузера"));
             }
-            // Видаляємо слухач, щоб не запускати код при кожному кліку
             document.removeEventListener('click', initAllAudio);
         };
         document.addEventListener('click', initAllAudio);
@@ -565,13 +561,6 @@
             setTimeout(() => toast.classList.add('hidden'), 2500);
         }
 
-        function submitRetroForm(e) {
-            e.preventDefault();
-            playPowerupSound();
-            showToast("TRANSMISSION SENT TO CASTLE!");
-            e.target.reset();
-        }
-
         let time = 300;
         setInterval(() => {
             if (time > 0) {
@@ -580,48 +569,42 @@
             }
         }, 1000);
 
-    document.querySelector('form').addEventListener('submit', async function(e) {
-    e.preventDefault(); // Зупиняємо стандартне перезавантаження сторінки
+        // Telegram Bot Form Integration
+        document.querySelector('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            playPowerupSound();
 
-    // Збираємо дані з полів твоєї форми
-    document.querySelector('form').addEventListener('submit', async function(e) {
-    e.preventDefault(); // Зупиняємо стандартне перезавантаження сторінки
+            const name = document.querySelector('input[placeholder="Гравець 1"]').value;
+            const contact = document.querySelector('input[placeholder="@username"]').value;
+            const message = document.querySelector('textarea').value;
 
-    // Чітко забираємо значення з інпутів за їхніми плейсхолдерами
-    const name = document.querySelector('input[placeholder="Гравець 1"]').value;
-    const contact = document.querySelector('input[placeholder="@username"]').value;
-    const message = document.querySelector('textarea').value;
+            const BOT_TOKEN = '9099488216:AAGF1hwuUq3NdUQyiS_AfZ02ST-ZZ12YHk';
+            const CHAT_ID = '1045628392';
 
-    // Твої точні дані бота
-    const BOT_TOKEN = '9099488216:AAGF1hwuUq3NdUQyiS_AfZ02ST-ZZ12YHk';
-    const CHAT_ID = '1045628392';
+            const text = `🕹 Нова трансляція з портфоліо!\n\n👤 Гравець/Ім'я: ${name}\n💬 Контакт (TG/Email): ${contact}\n📝 Повідомлення: ${message}`;
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
-    // Формуємо повідомлення
-    const text = `🕹 Нова трансляція з портфоліо!\n\n👤 Гравець/Ім'я: ${name}\n💬 Контакт (TG/Email): ${contact}\n📝 Повідомлення: ${message}`;
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: text
+                    })
+                });
 
-    const url = `[https://api.telegram.org/bot$](https://api.telegram.org/bot$){BOT_TOKEN}/sendMessage`;
-
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: text
-            })
+                if (response.ok) {
+                    showToast("TRANSMISSION SENT TO CASTLE!");
+                    this.reset();
+                } else {
+                    alert('Помилка відправки. Спробуйте ще раз.');
+                }
+            } catch (error) {
+                console.error('Помилка:', error);
+                alert('Сталася помилка з\'єднання.');
+            }
         });
-
-        if (response.ok) {
-            alert('Transmission sent successfully! 🚀');
-            this.reset(); // Очищуємо форму
-        } else {
-            alert('Помилка відправки. Спробуйте ще раз.');
-        }
-    } catch (error) {
-        console.error('Помилка:', error);
-        alert('Сталася помилка з\'єднання.');
-    }
-});
     </script>
 </body>
 </html>

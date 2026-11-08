@@ -579,26 +579,27 @@
                 document.getElementById('hud-time').innerText = String(time).padStart(3, '0');
             }
         }, 1000);
-        document.querySelector('form').addEventListener('submit', async function(e) {
+
+    document.querySelector('form').addEventListener('submit', async function(e) {
     e.preventDefault(); // Зупиняємо стандартне перезавантаження сторінки
 
     // Збираємо дані з полів твоєї форми
-    const nameInput = document.querySelector('input[placeholder="Гравець 1"]');
-    const contactInput = document.querySelector('input[placeholder="@username"]');
-    const messageInput = document.querySelector('textarea');
+    document.querySelector('form').addEventListener('submit', async function(e) {
+    e.preventDefault(); // Зупиняємо стандартне перезавантаження сторінки
 
-    const name = nameInput ? nameInput.value : 'Не вказано';
-    const contact = contactInput ? contactInput.value : 'Не вказано';
-    const message = messageInput ? messageInput.value : 'Не вказано';
+    // Чітко забираємо значення з інпутів за їхніми плейсхолдерами
+    const name = document.querySelector('input[placeholder="Гравець 1"]').value;
+    const contact = document.querySelector('input[placeholder="@username"]').value;
+    const message = document.querySelector('textarea').value;
 
-    // Твої точні дані
-    const BOT_TOKEN = '9099488216:AAGF1hwuuJq3NdUQyiS_AfZ02ST-ZZ12YHk';
+    // Твої точні дані бота
+    const BOT_TOKEN = '9099488216:AAGF1hwuUq3NdUQyiS_AfZ02ST-ZZ12YHk';
     const CHAT_ID = '1045628392';
 
-    // Формуємо красиве повідомлення у маріо-стилі
-    const text = `🕹 **Нова трансляція з портфоліо!**\n\n👤 **Гравець/Ім'я:** ${name}\n💬 **Контакт (TG/Email):** ${contact}\n📝 **Повідомлення:** ${message}`;
+    // Формуємо повідомлення
+    const text = `🕹 Нова трансляція з портфоліо!\n\n👤 Гравець/Ім'я: ${name}\n💬 Контакт (TG/Email): ${contact}\n📝 Повідомлення: ${message}`;
 
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    const url = `[https://api.telegram.org/bot$](https://api.telegram.org/bot$){BOT_TOKEN}/sendMessage`;
 
     try {
         const response = await fetch(url, {
@@ -606,14 +607,13 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 chat_id: CHAT_ID,
-                text: text,
-                parse_mode: 'Markdown'
+                text: text
             })
         });
 
         if (response.ok) {
             alert('Transmission sent successfully! 🚀');
-            this.reset(); // Очищуємо форму після відправки
+            this.reset(); // Очищуємо форму
         } else {
             alert('Помилка відправки. Спробуйте ще раз.');
         }
@@ -625,5 +625,3 @@
     </script>
 </body>
 </html>
-
-```

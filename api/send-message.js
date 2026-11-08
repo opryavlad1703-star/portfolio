@@ -9,7 +9,6 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, error: 'Усі поля обов’язкові' });
     }
 
-    // Твої дані бота захищені на сервері Vercel
     const BOT_TOKEN = '9099488216:AAGF1hwuUq3NdUQyiS_AfZ02ST-ZZ12YHk';
     const CHAT_ID = '1045628392';
 
@@ -33,7 +32,7 @@ export default async function handler(req, res) {
             return res.status(500).json({ success: false, error: data.description || 'Помилка Telegram API' });
         }
 
-        return res.status(200).json({ success: { success: true } });
+        return res.status(200).json({ success: true });
     } catch (error) {
         return res.status(500).json({ success: false, error: 'Помилка сервера' });
     }
